@@ -1,0 +1,38 @@
+name: 'Configure PostgreSQL'
+description: 'Common logic for PostgreSQL configuration'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Start Linux PostgreSQL service
+      shell: bash
+      if: runner.os == 'Linux'
+      run: |
+        sudo systemctl start postgresql.service
+        sudo -u postgres psql -c "CREATE USER $DATABASE_USER WITH CREATEDB PASSWORD '${DATABASE_PASSWORD}';"
+        bash ./scripts/configure_postgres.sh
+
+    - name: Start MacOS PostgreSQL service
+      shell: bash
+      if: runner.os == 'macOS'
+      run: |
+        brew install postgresql@17 libpq@17
+        brew link postgresql@17
+        brew services start postgresql@17
+        sleep 5
+        psql postgres -c "CREATE USER $DATABASE_USER WITH CREATEDB PASSWORD '${DATABASE_PASSWORD}';"
+        bash ./scripts/configure_postgres.sh
+
+    - name: Start Windows PostgreSQL service
+      shell: bash
+      if: runner.os == 'windows'
+      run: |
+        serviceName=$(powershell -Command "Get-Service -Name 'postgresql-x64-*' | Select-Object -ExpandProperty Name" | tr -d '\r')
+        echo "Detected service: $serviceName"
+        sc config "$serviceName" start= demand
+        net start "$serviceName"
+        pgVersion=$(echo "$serviceName" | grep -oP '\d+$')
+        export PGPASSWORD="root"
+        export PATH="/c/Program Files/PostgreSQL/$pgVersion/bin:$PATH"
+        psql -h 127.0.0.1 -U postgres -c "CREATE USER $DATABASE_USER WITH CREATEDB PASSWORD '$DATABASE_PASSWORD';"
+        bash ./scripts/configure_postgres.sh
