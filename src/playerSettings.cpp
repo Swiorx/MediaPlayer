@@ -2,9 +2,9 @@
 // Created by swior on 02.11.2026.
 //
 
-#include "../include/playerSettings.h"
-#include "raylib.h"
-#include "raygui.h"
+#include "playerSettings.h"
+#include <raylib.h>
+#include <raygui.h>
 #include <numeric>
 #include <sstream>
 #include <iomanip>

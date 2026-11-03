@@ -1,7 +1,7 @@
 #include "mediaFile.h"
-#include "minimp4.h"
-#include "mkvparser/mkvparser.h"
-#include "mkvparser/mkvreader.h"
+#include <minimp4.h>
+#include <mkvparser/mkvparser.h>
+#include <mkvparser/mkvreader.h>
 #include <string>
 #include <sstream>
 #include <fstream>
