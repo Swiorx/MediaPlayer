@@ -1,0 +1,8 @@
+name: 'Install common Linux dependencies'
+description: 'Common logic for Linux dependencies installation'
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        bash ./scripts/install-linux-deps.sh
+      shell: bash
