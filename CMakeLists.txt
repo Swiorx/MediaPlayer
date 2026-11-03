@@ -100,7 +100,6 @@ add_executable(${MAIN_EXECUTABLE_NAME}
 )
 target_sources(${MAIN_LIBRARY_NAME}
     PRIVATE
-        src/internal/Detail.cpp
 )
 
 if(MSVC)
