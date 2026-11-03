@@ -60,8 +60,8 @@ mediaFile::~mediaFile()
 
 struct mp4MemoryBuffer
 {
-    const uint8_t *data;
-    int64_t size;
+    const uint8_t *data = nullptr;
+    int64_t size = 0;
     size_t bytesRead = 0;
 };
 
