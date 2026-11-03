@@ -91,7 +91,6 @@ int main()
         mediaFile constructorCopy(first);
         mediaFile assignmentCopy;
         assignmentCopy = constructorCopy;
-        constructorCopy = constructorCopy;
 
         std::cout << "Fisier copiat prin operator<<: " << assignmentCopy << "\n";
         assignmentCopy.printStreamInfo(std::cout);

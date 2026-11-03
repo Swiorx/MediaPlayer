@@ -103,6 +103,14 @@ target_sources(${MAIN_LIBRARY_NAME}
         src/internal/Detail.cpp
 )
 
+if(MSVC)
+    set_source_files_properties(
+            ext/private/mkvparser/mkvparser.cc
+            ext/private/mkvparser/mkvreader.cc
+            PROPERTIES COMPILE_FLAGS "/W0"
+    )
+endif()
+
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
 # NOTE: RUN_SANITIZERS is optional, if it's not present it will default to true
 set_compiler_flags(RUN_SANITIZERS ${USE_ASAN} TARGET_NAMES ${MAIN_EXECUTABLE_NAME} ${MAIN_LIBRARY_NAME})
@@ -168,6 +176,15 @@ copy_files(FILES tastatura.txt DIRECTORY assets media COPY_TO_DESTINATION TARGET
 # copy_files(DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 
 ###############################################################################
+
+if(WIN32)
+    add_custom_command(TARGET ${TESTS_EXECUTABLE_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            $<TARGET_RUNTIME_DLLS:${TESTS_EXECUTABLE_NAME}>
+            $<TARGET_FILE_DIR:${TESTS_EXECUTABLE_NAME}>
+            COMMAND_EXPAND_LISTS
+    )
+endif()
 
 # Tests; BUILD_TESTING is declared in cmake/Options.cmake, include(CTest) enables it. No framework on main
 
