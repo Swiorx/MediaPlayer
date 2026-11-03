@@ -79,7 +79,20 @@ endif()
 # Configure sources
 
 # always STATIC (simpler); TBD if we ever want dynamic for this; BUILD_SHARED_LIBS is for ext deps
-add_library(${MAIN_LIBRARY_NAME} STATIC)
+add_library(${MAIN_LIBRARY_NAME} STATIC
+    include/playlistManager.h
+    include/mediaFile.h
+    include/playerSettings.h
+    include/playlist.h
+    src/playlistManager.cpp
+    src/mediaFile.cpp
+    src/playerSettings.cpp
+    src/playlist.cpp
+    ext/private/minimp4_impl.cpp
+    ext/private/raygui_impl.c
+    ext/private/mkvparser/mkvparser.cc
+    ext/private/mkvparser/mkvreader.cc
+)
 
 # NOTE: update EXECUTABLE_NAME in .github/workflows/cmake.yml when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
@@ -87,7 +100,6 @@ add_executable(${MAIN_EXECUTABLE_NAME}
 )
 target_sources(${MAIN_LIBRARY_NAME}
     PRIVATE
-        src/Example.cpp
         src/internal/Detail.cpp
 )
 
@@ -151,7 +163,7 @@ if(APPLE)
     install(FILES ${CMAKE_SOURCE_DIR}/launcher.command DESTINATION ${DESTINATION_DIR})
 endif()
 
-copy_files(FILES tastatura.txt DIRECTORY assets COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
+copy_files(FILES tastatura.txt DIRECTORY assets media COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(FILES tastatura.txt config.json DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 # copy_files(DIRECTORY images sounds COPY_TO_DESTINATION TARGET_NAME ${MAIN_EXECUTABLE_NAME})
 

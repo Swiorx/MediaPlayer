@@ -1,4 +1,7 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
+# MediaPlayer
+
+Player tip VLC de fisiere .mp4, .mkv, .mp3, .wav
+
 
 ### Folosiți template-ul corespunzător grupei voastre!
 
@@ -106,13 +109,6 @@ Proiectul este configurat cu CMake.
 
 Instrucțiuni pentru terminal:
 
-0. Biblioteci necesare pe Linux (ar trebui să meargă pe sisteme bazate pe Debian/Arch/Fedora/OpenSUSE, necesită `sudo`)
-```sh
-bash ./scripts/install-linux-deps.sh
-```
-
-Dacă lipsesc și alte biblioteci, ștergeți folder-ul de build de la pasul 1 și reconfigurați proiectul după ce ați instalat ce lipsea.
-
 1. Pasul de configurare
 ```sh
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
@@ -212,8 +208,10 @@ The project is licensed under [AGPLv3](LICENSE).
 The [template repository](https://github.com/mcmarius/oop-template) itself is licensed under [Unlicense](LICENSE.template).
 
 ## Resurse
-<!-- renovate: datasource=github-tags depName=raysan5/raylib versioning=loose -->
-- [raylib](https://github.com/raysan5/raylib/tree/6.0) (Zlib)
-<!-- renovate: datasource=github-tags depName=RobLoach/raylib-cpp versioning=loose -->
-- [raylib-cpp](https://github.com/RobLoach/raylib-cpp/tree/v6.0.3) (Zlib)
+
 - adăugați trimiteri **detaliate** către resursele externe care v-au ajutat sau pe care le-ați folosit
+
+- [Raylib 5.5](https://www.raylib.com/) - bibliotecă grafică și audio pentru C/C++ (Licență: zlib/libpng)
+- [raygui 4.0](https://github.com/raysan5/raygui) - bibliotecă GUI pentru Raylib (Licență: zlib/libpng)
+- [minimp4](https://github.com/lieff/minimp4) - demuxer MP4 single-header (Licență: CC0 1.0 Universal / Public Domain)
+- [libwebm / mkvparser](https://chromium.googlesource.com/webm/libwebm) - parser Matroska/WebM (Licență: BSD-3-Clause)
