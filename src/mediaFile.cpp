@@ -62,11 +62,12 @@ struct mp4MemoryBuffer
 {
     const uint8_t *data;
     int64_t size;
+    size_t bytesRead = 0;
 };
 
 static int minimp4Read(int64_t offset, void *buffer, size_t size, void *token)
 {
-    const auto *buf = static_cast<const mp4MemoryBuffer*>(token);
+    auto *buf = static_cast<mp4MemoryBuffer*>(token);
     if (!buf || offset < 0 || offset >= buf->size)
     {
         return -1;
@@ -78,6 +79,7 @@ static int minimp4Read(int64_t offset, void *buffer, size_t size, void *token)
         toCopy = size;
     }
     std::memcpy(buffer, buf->data + offset, toCopy);
+    buf->bytesRead += toCopy;
     return (toCopy == size) ? 0 : -1;
 }
 
@@ -106,7 +108,7 @@ bool mediaFile::scanMedia()
                 std::fclose(f);
                 f = nullptr;
 
-                mp4MemoryBuffer mp4Buf = { buffer.data(), static_cast<int64_t>(readCount) };
+                mp4MemoryBuffer mp4Buf = { buffer.data(), static_cast<int64_t>(readCount), 0};
                 MP4D_demux_t mp4;
                 std::memset(&mp4, 0, sizeof(mp4));
 
