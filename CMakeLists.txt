@@ -88,10 +88,6 @@ add_library(${MAIN_LIBRARY_NAME} STATIC
     src/mediaFile.cpp
     src/playerSettings.cpp
     src/playlist.cpp
-    ext/private/minimp4_impl.cpp
-    ext/private/raygui_impl.c
-    ext/private/mkvparser/mkvparser.cc
-    ext/private/mkvparser/mkvreader.cc
 )
 
 # NOTE: update EXECUTABLE_NAME in .github/workflows/cmake.yml when changing name here
@@ -102,13 +98,12 @@ target_sources(${MAIN_LIBRARY_NAME}
     PRIVATE
 )
 
-if(MSVC)
-    set_source_files_properties(
-            ext/private/mkvparser/mkvparser.cc
-            ext/private/mkvparser/mkvreader.cc
-            PROPERTIES COMPILE_FLAGS "/W0"
-    )
-endif()
+add_library(external_helpers STATIC
+        ext/private/mkvparser/mkvparser.cc
+        ext/private/mkvparser/mkvreader.cc
+        ext/private/minimp4_impl.cpp
+        ext/private/raygui_impl.c
+)
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
 # NOTE: RUN_SANITIZERS is optional, if it's not present it will default to true
@@ -124,6 +119,11 @@ target_include_directories(${MAIN_LIBRARY_NAME} PUBLIC
 )
 target_include_directories(${MAIN_LIBRARY_NAME} PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+)
+
+target_include_directories(external_helpers SYSTEM PUBLIC
+    ${EXT_PUBLIC_DIR}
+    ${EXT_PRIVATE_DIR}
 )
 
 # use SYSTEM so cppcheck and clang-tidy do not report warnings from these directories
@@ -142,8 +142,8 @@ target_include_directories(${MAIN_LIBRARY_NAME} SYSTEM PRIVATE
 ###############################################################################
 
 # Link libraries
-
-target_link_libraries(${MAIN_LIBRARY_NAME} PUBLIC raylib Threads::Threads)
+target_link_libraries(external_helpers PUBLIC raylib Threads::Threads)
+target_link_libraries(${MAIN_LIBRARY_NAME} PUBLIC Threads::Threads raylib external_helpers)
 target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE ${MAIN_LIBRARY_NAME})
 
 # target_link_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${<SomeLib>_BINARY_DIR}/lib)
