@@ -177,14 +177,6 @@ copy_files(FILES tastatura.txt DIRECTORY assets media COPY_TO_DESTINATION TARGET
 
 ###############################################################################
 
-if(WIN32)
-    add_custom_command(TARGET ${TESTS_EXECUTABLE_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $<TARGET_RUNTIME_DLLS:${TESTS_EXECUTABLE_NAME}>
-            $<TARGET_FILE_DIR:${TESTS_EXECUTABLE_NAME}>
-            COMMAND_EXPAND_LISTS
-    )
-endif()
 
 # Tests; BUILD_TESTING is declared in cmake/Options.cmake, include(CTest) enables it. No framework on main
 
