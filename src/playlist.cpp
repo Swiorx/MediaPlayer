@@ -6,6 +6,9 @@
 #include <fstream>
 #include <cctype>
 
+
+Playlist::Playlist() : name("Playlist-ul meu"), repeatAll(false) {}
+
 Playlist::Playlist(const std::string &name, bool repeatAll) : name(name), repeatAll(repeatAll) {}
 
 int Playlist::findIndexByName(const std::string& fileName) const

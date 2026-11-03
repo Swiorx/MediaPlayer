@@ -31,10 +31,15 @@ void PlayerSettings::validateSettings()
     }
 }
 
+PlayerSettings::PlayerSettings(): volume(10), playbackSpeed(1.0), resolutionWidth(1280), resolutionHeight(720), fullscreen(false)
+    {
+        validateSettings();
+    }
+
 PlayerSettings::PlayerSettings(int volume, double playbackSpeed, int resolutionWidth, int resolutionHeight, bool fullscreen) : volume(volume), playbackSpeed(playbackSpeed), resolutionWidth(resolutionWidth), resolutionHeight(resolutionHeight), fullscreen(fullscreen)
-{
-    validateSettings();
-}
+    {
+        validateSettings();
+    }
 
 bool PlayerSettings::initAudioEngine()
 {

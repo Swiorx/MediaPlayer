@@ -14,7 +14,8 @@ private:
     void validateSettings();
 
 public:
-    explicit PlayerSettings(int volume = 10, double playbackSpeed = 1.0, int resolutionWidth = 1280, int resolutionHeight = 720, bool fullscreen = false);
+    PlayerSettings();
+    explicit PlayerSettings(int volume, double playbackSpeed = 1.0, int resolutionWidth = 1280, int resolutionHeight = 720, bool fullscreen = false);
 
     static bool initAudioEngine();
 

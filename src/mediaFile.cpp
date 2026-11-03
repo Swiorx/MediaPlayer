@@ -16,6 +16,7 @@ bool mediaFile::validateDurationSize() const
     return (*duration > 0 && *fileSize > 0);
 }
 
+mediaFile::mediaFile() : mediaFile("unknown", "", ".mp4", 1, 1){}
 mediaFile::mediaFile(const std::string &fileName, const std::string &filePath, const std::string &fileType, int durationVal, int fileSizeVal) : fileName(fileName), filePath(filePath), fileType(fileType), codecName("unscanned")
 {
     duration = new int(durationVal);
