@@ -36,7 +36,7 @@ PlayerSettings::PlayerSettings(int volume, double playbackSpeed, int resolutionW
     validateSettings();
 }
 
-bool PlayerSettings::initAudioEngine() const
+bool PlayerSettings::initAudioEngine()
 {
     InitAudioDevice();
     const bool ready = IsAudioDeviceReady();

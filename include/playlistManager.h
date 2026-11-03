@@ -21,7 +21,7 @@ private:
 
 
 public:
-    PlaylistManager(const std::string &configFile, const PlayerSettings &settings = PlayerSettings{});
+    explicit PlaylistManager(const std::string &configFile, const PlayerSettings &settings = PlayerSettings{});
 
     void loadDefaultConfig();
     bool saveConfig(const std::string &path = "") const;
@@ -42,7 +42,7 @@ public:
     void printLibrarySummary(std::ostream &os) const;
     bool exportLibraryCatalog(const std::string &catalogPath) const;
 
-    std::string getFolderPath() const;
+    const std::string& getFolderPath() const;
     const std::vector<mediaFile>& getMediaList() const;
     const Playlist &getFavouritePlaylist() const;
     const PlayerSettings &getSettings() const;

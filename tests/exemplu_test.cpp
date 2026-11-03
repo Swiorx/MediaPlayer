@@ -20,8 +20,8 @@
         assert(f1.formatDuration() == "02:00");                                                                                                                                                         
         assert(f1.calculateBitrate() > 0.0);                                                                                                                                                            
         assert(f1.getResolutionPreset() == "Audio");                                                                                                                                                    
-        assert(f1.scanMedia());                                                                                                                                                                         
-        assert(f1.scan());
+        const bool scanned = f1.scanMedia();
+        assert(scanned);
         assert(f1.writeToCatalog("test_temp_catalog.txt"));                                                                                                                                             
                                                                                                                                                                                                         
         mediaFile f2(f1);
@@ -106,14 +106,16 @@
         assert(pl.getFiles().front().getDuration() == 300);                                                                                                                                             
                                                                                                                                                                                                         
         pl.swapFiles(0, 1);                                                                                                                                                                             
-        assert(pl.toggleRepeatAll() == true);                                                                                                                                                           
+        const bool rep = pl.toggleRepeatAll();
+        assert(rep);
         assert(pl.isRepeatAll() == true);                                                                                                                                                               
                                                                                                                                                                                                         
         pl.playAndRotate();                                                                                                                                                                             
         assert(pl.exportToM3U("test_export.m3u"));                                                                                                                                                      
         assert(pl.exportToCatalog("test_export_catalog.txt"));                                                                                                                                          
                                                                                                                                                                                                         
-        assert(pl.removeFile("piesa_noua"));                                                                                                                                                            
+        const bool removed = pl.removeFile("piesa_noua");
+        assert(removed);
         pl.clear();                                                                                                                                                                                     
         assert(pl.getFileCount() == 0);                                                                                                                                                                 
                                                                                                                                                                                                         
@@ -124,7 +126,8 @@
                                                                                                                                                                                                         
         pm.addFavouriteByName("melodie1");                                                                                                                                                              
         assert(pm.getFavouritePlaylist().containsFile("melodie1"));                                                                                                                                     
-        assert(pm.removeFavouriteByName("melodie1"));                                                                                                                                                   
+        const bool favRemoved = pm.removeFavouriteByName("melodie1");
+        assert(favRemoved);
                                                                                                                                                                                                         
         assert(pm.getQueueCount() >= 2);                                                                                                                                                                
         pm.playNextInQueue();                                                                                                                                                                           

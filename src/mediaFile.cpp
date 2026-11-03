@@ -66,7 +66,7 @@ struct mp4MemoryBuffer
 
 static int minimp4Read(int64_t offset, void *buffer, size_t size, void *token)
 {
-    auto *buf = static_cast<mp4MemoryBuffer *>(token);
+    const auto *buf = static_cast<const mp4MemoryBuffer*>(token);
     if (!buf || offset < 0 || offset >= buf->size)
     {
         return -1;

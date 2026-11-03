@@ -17,7 +17,7 @@ private:
     bool validateDurationSize() const;
 
 public:
-    mediaFile(const std::string &fileName = "unknown", const std::string &filePath = "", const std::string &fileType = ".mp4", int durationVal = 1, int fileSizeVal = 1);
+    explicit mediaFile(const std::string &fileName = "unknown", const std::string &filePath = "", const std::string &fileType = ".mp4", int durationVal = 1, int fileSizeVal = 1);
 
     mediaFile(const mediaFile& file);
     mediaFile& operator=(const mediaFile& file);

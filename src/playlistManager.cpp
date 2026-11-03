@@ -50,7 +50,7 @@ void PlaylistManager::loadDefaultConfig()
             auto end = line.find_last_not_of(" \t");
             if (end!= std::string::npos)
             {
-                line = line.substr(0, end+1);
+                line.resize(end + 1);
             }
 
             auto eqPos = line.find('=');
@@ -385,7 +385,7 @@ bool PlaylistManager::exportLibraryCatalog(const std::string& catalogPath) const
     return true;
 }
 
-std::string PlaylistManager::getFolderPath() const
+const std::string& PlaylistManager::getFolderPath() const
 {
     return folderPath;
 }

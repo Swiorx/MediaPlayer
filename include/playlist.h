@@ -17,7 +17,7 @@ private:
     int findIndexByName(const std::string &fileName) const;
 
 public:
-    Playlist(const std::string &name = "Playlist-ul meu", bool repeatAll = false);
+    explicit Playlist(const std::string &name = "Playlist-ul meu", bool repeatAll = false);
 
     void addFile(const mediaFile &file);
     void addFilePlayNext(const mediaFile &file);
