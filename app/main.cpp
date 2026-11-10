@@ -35,8 +35,6 @@ int main()
     }
     catalogIn.close();
 
-    std::cout << "---------------------------------------------------------\n";
-    std::cout << "Comenzi interactive acceptate:\n";
     std::cout << "  1 Modificare setari si salvare in configFile.config\n";
     std::cout << "  2 Adaugare melodie la favorite\n";
     std::cout << "  3 Stergere melodie din playlist / favorite\n";
@@ -47,7 +45,6 @@ int main()
     std::cout << "  8 Filtrare fluxuri si afisare statistici\n";
     std::cout << "  9 Afisare sumar biblioteca si configuratie\n";
     std::cout << "  0 Iesire curata din aplicatie\n";
-    std::cout << "---------------------------------------------------------\n";
 
     int optiune = 0;
     while (true)
