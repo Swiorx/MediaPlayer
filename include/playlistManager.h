@@ -31,16 +31,13 @@ public:
     void addMediaToLibrary(const mediaFile &file);
     void addFavouriteByName(const std::string &fileName);
     bool removeFavouriteByName(const std::string &fileName);
-    void playNextInQueue(std::ostream &os = std::cout);
+    mediaFile playNextInQueue(std::ostream &os = std::cout);
     int getEffectiveLibraryDuration() const;
 
-    std::vector<mediaFile> searchLibrary(const std::string &keyword) const;
-    std::vector<mediaFile> filterByCodec(const std::string &codec) const;
     int getLibraryTotalSizeKB() const;
     int getQueueCount() const;
     void clearQueue();
     void printLibrarySummary(std::ostream &os) const;
-    bool exportLibraryCatalog(const std::string &catalogPath) const;
 
     const std::string& getFolderPath() const;
     const std::vector<mediaFile>& getMediaList() const;

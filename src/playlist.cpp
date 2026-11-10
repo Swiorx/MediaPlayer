@@ -146,29 +146,6 @@ int Playlist::getTotalFileSizeKB() const
     return total;
 }
 
-double Playlist::getAverageDuration() const
-{
-    if (files.empty()) return 0;
-
-    return static_cast<double>(getTotalDuration()) / static_cast<double>(files.size());
-}
-
-mediaFile Playlist::getLongestFile() const
-{
-    if (files.empty()) return mediaFile();
-
-    auto it = std::max_element(files.begin(), files.end(), [](const mediaFile &a, const mediaFile &b){return a.getDuration() < b.getDuration();});
-    return *it;
-}
-
-mediaFile Playlist::getShortestFile() const
-{
-    if (files.empty()) return mediaFile();
-
-    auto it = std::min_element(files.begin(), files.end(), [](const mediaFile &a, const mediaFile &b){return a.getDuration() < b.getDuration();});
-    return *it;
-}
-
 bool Playlist::containsFile(const std::string& fileName) const
 {
     return (findIndexByName(fileName) != -1);
@@ -177,14 +154,6 @@ bool Playlist::containsFile(const std::string& fileName) const
 void Playlist::clear()
 {
     files.clear();
-}
-
-bool Playlist::swapFiles(std::size_t index1, std::size_t index2)
-{
-    if (index1 >= files.size() || index2 >= files.size() || index1 == index2) return false;
-
-    std::swap(files[index1], files[index2]);
-    return true;
 }
 
 bool Playlist::exportToM3U(const std::string& outputPath) const
@@ -199,17 +168,6 @@ bool Playlist::exportToM3U(const std::string& outputPath) const
         out<< (f.getFilePath().empty() ? (f.getFileName() + f.getFileType()) : f.getFilePath()) << "\n";
     }
     return true;
-}
-
-bool Playlist::exportToCatalog(const std::string& outputPath) const
-{
-    std::ofstream out(outputPath);
-    if (!out.is_open()) return false;
-    for (const auto &f : files)
-    {
-        out << f.getFileName() << " " << (f.getFilePath().empty() ? "./media/" + f.getFileName() + f.getFileType() : f.getFilePath()) << " " << f.getFileType() << " " << f.getDuration() << " " << f.getFileSize() << "\n";
-    }
-    return out.good();
 }
 
 std::size_t Playlist::getFileCount() const

@@ -24,7 +24,7 @@ void PlaylistManager::loadDefaultConfig()
     std::ifstream file(configFile);
     if (!file.is_open())
     {
-        std::string alt ="../" + configFile;
+        std::string alt = "assets/" + configFile;
         file.open(alt);
         if (file.is_open())
         {
@@ -35,125 +35,55 @@ void PlaylistManager::loadDefaultConfig()
     if (file.is_open())
     {
         std::string line;
-        bool hasKeyValue = false;
-        std::vector<std::string> whiteLines;
-
         while (std::getline(file,line))
         {
             if (!line.empty() && line.back() == '\r')
             {
                 line.pop_back();
             }
-            auto start = line.find_first_not_of(" \t");
-            if (start == std::string::npos || line[start] == '#') continue;
-            line = line.substr(start);
-            auto end = line.find_last_not_of(" \t");
-            if (end!= std::string::npos)
+            const auto eqPos = line.find('=');
+            if (eqPos == std::string::npos)
             {
-                line.resize(end + 1);
+                continue;
             }
+            std::string key = line.substr(0, eqPos);
+            std::string value = line.substr(eqPos + 1);
+            std::transform(key.begin(), key.end(), key.begin(), [](unsigned char c){ return static_cast<char>(std::toupper(c)); });
 
-            auto eqPos = line.find('=');
-            if (eqPos != std::string::npos)
+            try
             {
-                hasKeyValue = true;
-                std::string key = line.substr(0, eqPos);
-                std::string value = line.substr(eqPos+1);
-
-                auto kStart = key.find_first_not_of(" \t");
-                auto kEnd = key.find_last_not_of(" \t");
-                if (kStart != std::string::npos && kEnd != std::string::npos)
-                {
-                    key = key.substr(kStart, kEnd-kStart + 1);
-                }
-
-                auto vStart = value.find_first_not_of(" \t");
-                auto vEnd = value.find_last_not_of(" \t");
-                if (vStart != std::string::npos && vEnd != std::string::npos)
-                {
-                    value = value.substr(vStart, vEnd-vStart + 1);
-                }
-
-                std::transform(key.begin(),key.end(),key.begin(), [](unsigned char c){return static_cast<char>(std::toupper(c)); });
                 if (key == "FOLDER")
                 {
                     folderPath = value;
                 }
                 else if (key == "VOLUME")
                 {
-                    try
-                    {
-                        settings.setVolume(std::stoi(value));
-                    }
-                    catch (...){}
+                    settings.setVolume(std::stoi(value));
                 }
                 else if (key == "SPEED")
                 {
-                    try
-                    {
-                        settings.setPlaybackSpeed(std::stod(value));
-                    }
-                    catch (...){}
+                    settings.setPlaybackSpeed(std::stod(value));
                 }
                 else if (key == "WIDTH")
                 {
-                    try
-                    {
-                        settings.setCustomResolution(std::stoi(value), settings.getResolutionHeight());
-                    }
-                    catch (...){}
+                    settings.setCustomResolution(std::stoi(value), settings.getResolutionHeight());
                 }
                 else if (key == "HEIGHT")
                 {
-                    try
-                    {
-                        settings.setCustomResolution(settings.getResolutionWidth(), std::stoi(value));
-                    }
-                    catch (...){}
+                    settings.setCustomResolution(settings.getResolutionWidth(), std::stoi(value));
                 }
                 else if (key == "FULLSCREEN")
                 {
-                    try
-                    {
-                        settings.setFullscreen(std::stoi(value) != 0);
-                    }
-                    catch (...){}
+                    settings.setFullscreen(std::stoi(value) != 0);
                 }
                 else if (key == "PRESET")
                 {
                     settings.applyResolutionPreset(value);
                 }
             }
-            else
-            {
-                whiteLines.push_back(line);
-            }
+            catch (...) {}
         }
         file.close();
-
-        if (!hasKeyValue && !whiteLines.empty())
-        {
-            folderPath = whiteLines[0];
-            if (whiteLines.size() > 1)
-            {
-                std::istringstream iss(whiteLines[1]);
-                int vol = 10;
-                double speed = 1;
-                int w = 1280;
-                int h = 720;
-                int fs = 0;
-                std::string preset;
-                if (iss >> vol >> speed >> w >> h >> fs >> preset)
-                {
-                    settings.setVolume(vol);
-                    settings.setPlaybackSpeed(speed);
-                    settings.setCustomResolution(w,h);
-                    settings.setFullscreen(fs != 0);
-                    settings.applyResolutionPreset(preset);
-                }
-            }
-        }
-
         if (folderPath.empty())
         {
             folderPath ="./media";
@@ -183,25 +113,9 @@ bool PlaylistManager::saveConfig(const std::string& path) const
 
 void PlaylistManager::updateFolderPath(const std::string& newPath)
 {
-    if (std::ofstream outFile(configFile, std::ios::trunc); outFile.is_open())
-    {
-        outFile<<newPath;
-        outFile.close();
-        if (!outFile.good())
-        {
-            std::cerr << "Eroare la scriere sau inchiderea fisierului";
-        }
-        else
-        {
-            folderPath = newPath;
-            saveConfig();
-            updateMediaList();
-        }
-    }
-    else
-    {
-        std::cerr<<"Nu s-a putut deschide fisierul";
-    }
+    folderPath = newPath;
+    saveConfig();
+    updateMediaList();
 }
 
 
@@ -211,6 +125,12 @@ void PlaylistManager::updateMediaList()
     clearQueue();
     try
     {
+        const std::filesystem::path parentMedia = std::filesystem::current_path().parent_path() / "media";
+        if (std::filesystem::exists(parentMedia) && std::filesystem::exists(folderPath)) {
+            std::error_code ec;
+            std::filesystem::copy(parentMedia, folderPath, std::filesystem::copy_options::skip_existing, ec);
+        }
+
         if (std::filesystem::exists(folderPath) && std::filesystem::is_directory(folderPath))
         {
             for (const auto& entry : std::filesystem::directory_iterator(folderPath))
@@ -273,12 +193,12 @@ bool PlaylistManager::removeFavouriteByName(const std::string& fileName)
     return favouritePlaylist.removeFile(fileName);
 }
 
-void PlaylistManager::playNextInQueue(std::ostream &os)
+mediaFile PlaylistManager::playNextInQueue(std::ostream &os)
 {
     if (mediaPlaylist.empty())
     {
         os << "Coada este goala" << "\n";
-        return;
+        return mediaFile();
     }
     mediaFile  current = mediaPlaylist.front();
     mediaPlaylist.pop();
@@ -288,6 +208,7 @@ void PlaylistManager::playNextInQueue(std::ostream &os)
     const int realDuration = settings.calculateEffectiveDuration(current.getDuration());
     settings.displayPlayerScreen(current.getFileName() + current.getFileType(), current.getCodecName(), current.getDuration(), 0);
     os << "Element din coada: " << current << "Durata la viteza curenta: " << realDuration << "s" << "\n";
+    return current;
 }
 
 int PlaylistManager::getEffectiveLibraryDuration() const
@@ -298,40 +219,6 @@ int PlaylistManager::getEffectiveLibraryDuration() const
         totalSeconds += file.getDuration();
     }
     return settings.calculateEffectiveDuration(totalSeconds);
-}
-
-std::vector<mediaFile> PlaylistManager::searchLibrary(const std::string& keyword) const
-{
-    std::vector<mediaFile> rez;
-    if (keyword.empty()) return rez;
-
-    std::string lowerKeyword = keyword;
-    std::transform(lowerKeyword.begin(), lowerKeyword.end(), lowerKeyword.begin(), [](const unsigned char c){return std::tolower(c); });
-
-    for (const auto &f : mediaList)
-    {
-        std::string lowerName = f.getFileName();
-        std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), [](const unsigned char c){return std::tolower(c); });
-        if (lowerName.find(lowerKeyword) != std::string::npos || f.getFileType().find(lowerKeyword) != std::string::npos)
-        {
-            rez.push_back(f);
-        }
-    }
-    return rez;
-
-}
-
-std::vector<mediaFile> PlaylistManager::filterByCodec(const std::string& codec) const
-{
-    std::vector<mediaFile> rez;
-    for (const auto &f : mediaList)
-    {
-        if (f.getCodecName() == codec || f.getCodecName().find(codec) != std::string::npos)
-        {
-            rez.push_back(f);
-        }
-    }
-    return rez;
 }
 
 int PlaylistManager::getLibraryTotalSizeKB() const
@@ -369,20 +256,6 @@ void PlaylistManager::printLibrarySummary(std::ostream& os) const
     os << "Durata totala: " << getEffectiveLibraryDuration() << "s la viteza " << settings.getPlaybackSpeed() << "\n";
     os << "Elemente in coada: " << mediaPlaylist.size() << "\n";
     os << "Elemente favorite: " << favouritePlaylist.getFiles().size() << "\n";
-}
-
-bool PlaylistManager::exportLibraryCatalog(const std::string& catalogPath) const
-{
-    std::ofstream catalog(catalogPath);
-    if (!catalog.is_open()) return false;
-
-    catalog << "Catalog Media Player" << "\n";
-    catalog << "Numar fisiere: " << mediaList.size() << "\n";
-    for (const auto &f : mediaList)
-    {
-        catalog << f.getFileName() << f.getFileType() << " " << f.getCodecName() << " " << f.getDuration() << "s" << f.getFilePath() << "\n";
-    }
-    return true;
 }
 
 const std::string& PlaylistManager::getFolderPath() const

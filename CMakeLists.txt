@@ -88,6 +88,8 @@ add_library(${MAIN_LIBRARY_NAME} STATIC
     src/mediaFile.cpp
     src/playerSettings.cpp
     src/playlist.cpp
+    src/mediaDecoder.cpp
+    include/mediaDecoder.h
 )
 
 # NOTE: update EXECUTABLE_NAME in .github/workflows/cmake.yml when changing name here
@@ -98,16 +100,27 @@ target_sources(${MAIN_LIBRARY_NAME}
     PRIVATE
 )
 
+file(GLOB FAAD2_SOURCES ext/private/faad2/*.c)
+file(GLOB OPENH264_COMMON_SOURCES ext/private/openh264/common/src/*.cpp)
+file(GLOB OPENH264_DEC_CORE_SOURCES ext/private/openh264/decoder/core/src/*.cpp)
+file(GLOB OPENH264_DEC_PLUS_SOURCES ext/private/openh264/decoder/plus/src/*.cpp)
+
 add_library(external_helpers STATIC
         ext/private/mkvparser/mkvparser.cc
         ext/private/mkvparser/mkvreader.cc
         ext/private/minimp4_impl.cpp
         ext/private/raygui_impl.c
+        ${FAAD2_SOURCES}
+        ${OPENH264_COMMON_SOURCES}
+        ${OPENH264_DEC_CORE_SOURCES}
+        ${OPENH264_DEC_PLUS_SOURCES}
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
 # NOTE: RUN_SANITIZERS is optional, if it's not present it will default to true
 set_compiler_flags(RUN_SANITIZERS ${USE_ASAN} TARGET_NAMES ${MAIN_EXECUTABLE_NAME} ${MAIN_LIBRARY_NAME})
+
+target_compile_options(external_helpers PRIVATE -O3)
 
 ###############################################################################
 
@@ -123,8 +136,15 @@ target_include_directories(${MAIN_LIBRARY_NAME} PRIVATE
 
 target_include_directories(external_helpers SYSTEM PUBLIC
     ${EXT_PUBLIC_DIR}
+    ${EXT_PUBLIC_DIR}/wels
     ${EXT_PRIVATE_DIR}
+    ${EXT_PRIVATE_DIR}/faad2
+    ${EXT_PRIVATE_DIR}/openh264/common/inc
+    ${EXT_PRIVATE_DIR}/openh264/decoder/core/inc
+    ${EXT_PRIVATE_DIR}/openh264/decoder/plus/inc
 )
+
+target_compile_definitions(external_helpers PRIVATE PACKAGE_VERSION="2.10.1")
 
 # use SYSTEM so cppcheck and clang-tidy do not report warnings from these directories
 # vendored external deps should be private by default
@@ -135,6 +155,7 @@ target_include_directories(${MAIN_LIBRARY_NAME} SYSTEM PUBLIC
 )
 target_include_directories(${MAIN_LIBRARY_NAME} SYSTEM PRIVATE
     ${EXT_PRIVATE_DIR}
+    ${EXT_PRIVATE_DIR}/faad2
 )
 
 # target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${<SomeLib>_SOURCE_DIR}/include)

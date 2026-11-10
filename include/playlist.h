@@ -32,14 +32,9 @@ public:
     Playlist searchByName(const std::string &keyword) const;
 
     int getTotalFileSizeKB() const;
-    double getAverageDuration() const;
-    mediaFile getLongestFile() const;
-    mediaFile getShortestFile() const;
     bool containsFile(const std::string &fileName) const;
     void clear();
-    bool swapFiles(std::size_t index1, std::size_t index2);
     bool exportToM3U(const std::string &outputPath) const;
-    bool exportToCatalog(const std::string &outputPath) const;
 
     std::size_t getFileCount() const;
     const std::string &getName() const;

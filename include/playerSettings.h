@@ -17,8 +17,6 @@ public:
     PlayerSettings();
     explicit PlayerSettings(int volume, double playbackSpeed = 1.0, int resolutionWidth = 1280, int resolutionHeight = 720, bool fullscreen = false);
 
-    static bool initAudioEngine();
-
     void adjustVolume(int delta);
     void setVolume(int newVolume);
     void setPlaybackSpeed(double newSpeed);
@@ -27,12 +25,10 @@ public:
     void applyResolutionPreset(const std::string &presetName);
     int calculateEffectiveDuration(int rawSeconds) const;
 
-    std::string getAspectRatio() const;
     void setCustomResolution(int newWidth, int newHeight);
     void resetDefaults();
-    std::string getSettingsDescription() const;
     void displayPlayerScreen(const std::string &title, const std::string &codec, int totalDuration, int elapsedSeconds = 0, std::ostream &os = std::cout) const;
-    bool playRay(const std::string &title, const std::string &codec, int durationVal, bool interactive = false) const;
+    bool playRay(const std::string &title, const std::string &codec, int durationVal, bool interactive = false, const std::string &filePath = "") const;
 
     std::string getResolutionPreset() const;
     int getVolume() const;

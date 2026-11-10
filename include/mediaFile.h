@@ -25,15 +25,12 @@ public:
     ~mediaFile();
 
     bool scanMedia();
-    bool scan(){return scanMedia();};
     void printStreamInfo(std::ostream &os) const;
-    bool validateFileIntegrity() const;
     bool writeToCatalog(const std::string &catalogPath) const;
 
     double calculateBitrate() const;
     std::string formatDuration() const;
     std::string formatFileSize() const;
-    std::string getResolutionPreset() const;
 
     bool isAudio() const;
     bool isVideo() const;
