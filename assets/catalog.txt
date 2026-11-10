@@ -1,4 +1,0 @@
-melodie_house ./media/melodie_house.mp3 .mp3 215 6800
-videoclip_youtube ./media/videoclip_youtube.mp4 .mp4 185 45000
-melodie_rock ./media/melodie_rock.wav .wav 240 7500
-
