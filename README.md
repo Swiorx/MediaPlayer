@@ -215,5 +215,5 @@ The [template repository](https://github.com/mcmarius/oop-template) itself is li
 - [raygui 4.0](https://github.com/raysan5/raygui) - bibliotecă GUI pentru Raylib (Licență: zlib/libpng)
 - [minimp4](https://github.com/lieff/minimp4) - demuxer MP4 single-header (Licență: CC0 1.0 Universal / Public Domain)
 - [libwebm / mkvparser](https://chromium.googlesource.com/webm/libwebm) - parser Matroska/WebM (Licență: BSD-3-Clause)
-- [openh264 2.7.0](https://github.com/cisco/openh264) - decodor h264 (Licență: BSD-2-Clause)
+- [wels openh264 2.7.0](https://github.com/cisco/openh264) - decodor h264 (Licență: BSD-2-Clause)
 - [faad2 2.11.4](https://github.com/FreewareAdvancedAudio/faad2) - decodor AAC (Licență: GNU General Public License)
