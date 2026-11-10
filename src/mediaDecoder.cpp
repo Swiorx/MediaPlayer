@@ -312,7 +312,7 @@ bool MediaDecoder::fillAudioStreamChunk(int16_t *outFrames, int framesNeeded)
             if (static_cast<size_t>(mp4FileStream.gcount()) == frameBytes)
             {
                 NeAACDecFrameInfo frameInfo{};
-                void *pcm = NeAACDecDecode(hAAC, &frameInfo, aacPacket.data(), frameBytes);
+                const void *pcm = NeAACDecDecode(hAAC, &frameInfo, aacPacket.data(), frameBytes);
                 if (frameInfo.error == 0 && frameInfo.samples > 0 && pcm != nullptr)
                 {
                     const auto *samplesPtr = static_cast<const int16_t *>(pcm);

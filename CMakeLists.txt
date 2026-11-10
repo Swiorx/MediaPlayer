@@ -144,8 +144,13 @@ target_include_directories(external_helpers SYSTEM PUBLIC
     ${EXT_PRIVATE_DIR}/openh264/decoder/plus/inc
 )
 
-target_compile_definitions(external_helpers PRIVATE PACKAGE_VERSION="2.10.1")
+target_compile_definitions(external_helpers PRIVATE
+        PACKAGE_VERSION="2.10.1"
+        HAVE_STDINT_H=1
+        HAVE_INTTYPES_H=1
+)
 
+set(AUDIT_EXT_LIBS_ALLOW "ext/private/openh264;ext/private/faad2" CACHE STRING "Decodoare externe folosite de mediaDecoder" FORCE)
 # use SYSTEM so cppcheck and clang-tidy do not report warnings from these directories
 # vendored external deps should be private by default
 # a public dep is an interface commitment, shared by app/ and tests/
